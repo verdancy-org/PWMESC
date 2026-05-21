@@ -1,0 +1,10 @@
+# CMakeLists.txt for PWMEsc
+
+target_include_directories(xr PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+
+file(GLOB MODULE_PWMESC_SRC
+    "${CMAKE_CURRENT_LIST_DIR}/*.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/*.c"
+)
+
+target_sources(xr PRIVATE ${MODULE_PWMESC_SRC})
