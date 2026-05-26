@@ -39,8 +39,10 @@ depends: []
 
 class PWMEsc : public LibXR::Application {
  public:
+  static constexpr size_t kMaxEscCount = 6;
+
   struct Command {
-    std::array<float, 6> normalized = {};
+    std::array<float, kMaxEscCount> normalized = {};
   };
 
   PWMEsc(LibXR::HardwareContainer& hw, LibXR::ApplicationManager& app,
@@ -49,7 +51,7 @@ class PWMEsc : public LibXR::Application {
          uint32_t disarmed_pulse_us, uint32_t signal_timeout_ms,
          size_t task_stack_depth)
       : esc_count_(std::clamp<uint32_t>(esc_count, 1u,
-                                        static_cast<uint32_t>(pwm_.size()))),
+                                        static_cast<uint32_t>(kMaxEscCount))),
         frequency_hz_(frequency),
         min_pulse_us_(min_pulse_us),
         max_pulse_us_(max_pulse_us),
@@ -178,11 +180,11 @@ class PWMEsc : public LibXR::Application {
   uint32_t disarmed_pulse_us_ = 1000;
   uint32_t signal_timeout_ms_ = 1000;
   Command command_;
-  std::array<uint32_t, 6> last_pulse_us_ = {1000, 1000, 1000,
-                                            1000, 1000, 1000};
+  std::array<uint32_t, kMaxEscCount> last_pulse_us_ = {
+      1000, 1000, 1000, 1000, 1000, 1000};
   LibXR::Topic command_topic_;
   LibXR::Topic::SyncSubscriber<Command> command_sub_;
-  std::array<LibXR::PWM*, 6> pwm_ = {};
+  std::array<LibXR::PWM*, kMaxEscCount> pwm_ = {};
   LibXR::RamFS::File cmd_file_;
   LibXR::Thread thread_;
 };
