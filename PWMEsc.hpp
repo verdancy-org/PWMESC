@@ -31,6 +31,15 @@ depends: []
 #include "ramfs.hpp"
 #include "thread.hpp"
 
+#ifndef XR_STDIO_PRINTF_COMPAT
+#if __has_include("print.hpp")
+#define XR_STDIO_PRINTF_COMPAT(fmt, ...) LibXR::STDIO::Printf<fmt>(__VA_ARGS__)
+#else
+#define XR_STDIO_PRINTF_COMPAT(fmt, ...) \
+  LibXR::STDIO::Printf(fmt __VA_OPT__(, ) __VA_ARGS__)
+#endif
+#endif
+
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -138,18 +147,19 @@ class PWMEsc : public LibXR::Application {
 
   static int CommandFunc(PWMEsc* pwm_esc, int argc, char** argv) {
     if (argc == 1) {
-      LibXR::STDIO::Printf("Usage:\r\n");
-      LibXR::STDIO::Printf(
+      XR_STDIO_PRINTF_COMPAT("Usage:\r\n");
+      XR_STDIO_PRINTF_COMPAT(
           "  show                         - Print current ESC pulses.\r\n");
-      LibXR::STDIO::Printf(
+      XR_STDIO_PRINTF_COMPAT(
           "  set [index] [0.0-1.0]        - Set one ESC throttle for debug.\r\n");
       return 0;
     }
 
     if (argc == 2 && std::strcmp(argv[1], "show") == 0) {
       for (size_t i = 0; i < pwm_esc->esc_count_; ++i) {
-        LibXR::STDIO::Printf("esc[%d] = %u us\r\n", static_cast<int>(i + 1),
-                             pwm_esc->last_pulse_us_[i]);
+        XR_STDIO_PRINTF_COMPAT("esc[%d] = %u us\r\n",
+                               static_cast<int>(i + 1),
+                               pwm_esc->last_pulse_us_[i]);
       }
       return 0;
     }
@@ -158,7 +168,7 @@ class PWMEsc : public LibXR::Application {
       int index = std::atoi(argv[2]);
       float value = static_cast<float>(std::atof(argv[3]));
       if (index < 1 || static_cast<size_t>(index) > pwm_esc->esc_count_) {
-        LibXR::STDIO::Printf("Error: Invalid ESC index.\r\n");
+        XR_STDIO_PRINTF_COMPAT("Error: Invalid ESC index.\r\n");
         return -1;
       }
 
@@ -169,7 +179,7 @@ class PWMEsc : public LibXR::Application {
       return 0;
     }
 
-    LibXR::STDIO::Printf("Error: Invalid arguments.\r\n");
+    XR_STDIO_PRINTF_COMPAT("Error: Invalid arguments.\r\n");
     return -1;
   }
 
