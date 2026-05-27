@@ -1,4 +1,4 @@
-# CMakeLists.txt for PWMEsc
+# CMakeLists.txt for PWMESC
 
 target_include_directories(xr PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 

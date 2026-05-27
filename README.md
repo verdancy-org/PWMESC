@@ -1,4 +1,4 @@
-# PWMEsc
+# PWMESC
 
 PWM ESC output module
 
