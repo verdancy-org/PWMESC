@@ -57,8 +57,7 @@ class PWMESC : public LibXR::Application {
         max_pulse_us_(max_pulse_us),
         disarmed_pulse_us_(disarmed_pulse_us),
         signal_timeout_ms_(signal_timeout_ms),
-        command_topic_(command_topic_name, sizeof(command_), nullptr, true, true,
-                       true),
+        command_topic_(LibXR::Topic::CreateTopic<Command>(command_topic_name, nullptr, true)),
         command_sub_(command_topic_, command_),
         cmd_file_(LibXR::RamFS::CreateFile("pwm_esc", CommandFunc, this)) {
     ASSERT(frequency_hz_ > 0);
