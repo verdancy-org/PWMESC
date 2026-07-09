@@ -2,7 +2,7 @@
 
 // clang-format off
 /* === MODULE MANIFEST V2 ===
-module_description: PWM ESC output module
+module_description: XRobot Module for PWM ESC output
 constructor_args:
   - command_topic_name: "pwm_esc_cmd"
   - esc_count: 4
